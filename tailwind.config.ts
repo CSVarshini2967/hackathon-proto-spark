@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        ayur: {
+          vata: "hsl(var(--ayur-vata))",
+          pitta: "hsl(var(--ayur-pitta))",
+          kapha: "hsl(var(--ayur-kapha))",
+          orange: "hsl(var(--ayur-orange))",
+          success: "hsl(var(--ayur-success))",
+          warning: "hsl(var(--ayur-warning))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
