@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,11 +15,20 @@ import {
   Home
 } from "lucide-react";
 
+import PatientsList from "./doctor/PatientsList";
+import FoodDatabase from "./doctor/FoodDatabase";
+import DietCharts from "./doctor/DietCharts";
+import Analytics from "./doctor/Analytics";
+import AyurvedicTools from "./doctor/AyurvedicTools";
+
 interface DoctorDashboardProps {
   onBack: () => void;
 }
 
+type ActiveView = 'dashboard' | 'patients' | 'food-database' | 'diet-charts' | 'analytics' | 'ayurvedic-tools';
+
 const DoctorDashboard = ({ onBack }: DoctorDashboardProps) => {
+  const [activeView, setActiveView] = useState<ActiveView>('dashboard');
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -58,27 +68,51 @@ const DoctorDashboard = ({ onBack }: DoctorDashboardProps) => {
         {/* Sidebar */}
         <div className="w-64 bg-white border-r min-h-screen">
           <nav className="p-4 space-y-2">
-            <Button variant="secondary" className="w-full justify-start bg-ayur-orange/10 text-ayur-orange">
+            <Button 
+              onClick={() => setActiveView('dashboard')}
+              variant={activeView === 'dashboard' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'dashboard' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <Home className="h-4 w-4 mr-3" />
               Dashboard
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              onClick={() => setActiveView('patients')}
+              variant={activeView === 'patients' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'patients' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <Users className="h-4 w-4 mr-3" />
               Patients
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              onClick={() => setActiveView('food-database')}
+              variant={activeView === 'food-database' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'food-database' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <Database className="h-4 w-4 mr-3" />
               Food Database
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              onClick={() => setActiveView('diet-charts')}
+              variant={activeView === 'diet-charts' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'diet-charts' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <FileText className="h-4 w-4 mr-3" />
               Diet Charts
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              onClick={() => setActiveView('analytics')}
+              variant={activeView === 'analytics' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'analytics' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <TrendingUp className="h-4 w-4 mr-3" />
               Analytics
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              onClick={() => setActiveView('ayurvedic-tools')}
+              variant={activeView === 'ayurvedic-tools' ? "secondary" : "ghost"} 
+              className={`w-full justify-start ${activeView === 'ayurvedic-tools' ? 'bg-ayur-orange/10 text-ayur-orange' : ''}`}
+            >
               <Activity className="h-4 w-4 mr-3" />
               Ayurvedic Tools
             </Button>
@@ -87,176 +121,197 @@ const DoctorDashboard = ({ onBack }: DoctorDashboardProps) => {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-ayur-vata/10 rounded-lg">
-                    <Users className="h-6 w-6 text-ayur-vata" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Patients</p>
-                    <p className="text-2xl font-bold">1,247</p>
-                    <p className="text-xs text-ayur-success">↑ 12% from last month</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {activeView === 'dashboard' && (
+            <>
+              {/* Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-ayur-vata/10 rounded-lg">
+                        <Users className="h-6 w-6 text-ayur-vata" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Total Patients</p>
+                        <p className="text-2xl font-bold">1,247</p>
+                        <p className="text-xs text-ayur-success">↑ 12% from last month</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-ayur-vata/10 rounded-lg">
-                    <FileText className="h-6 w-6 text-ayur-vata" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Diet Charts Created</p>
-                    <p className="text-2xl font-bold">342</p>
-                    <p className="text-xs text-ayur-success">↑ 8% this month</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-ayur-vata/10 rounded-lg">
+                        <FileText className="h-6 w-6 text-ayur-vata" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Diet Charts Created</p>
+                        <p className="text-2xl font-bold">342</p>
+                        <p className="text-xs text-ayur-success">↑ 8% this month</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-ayur-vata/10 rounded-lg">
-                    <Database className="h-6 w-6 text-ayur-vata" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Food Items</p>
-                    <p className="text-2xl font-bold">8,247</p>
-                    <p className="text-xs text-muted-foreground">In database</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-ayur-vata/10 rounded-lg">
+                        <Database className="h-6 w-6 text-ayur-vata" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Food Items</p>
+                        <p className="text-2xl font-bold">8,247</p>
+                        <p className="text-xs text-muted-foreground">In database</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-ayur-vata/10 rounded-lg">
-                    <Calendar className="h-6 w-6 text-ayur-vata" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Appointments</p>
-                    <p className="text-2xl font-bold">28</p>
-                    <p className="text-xs text-muted-foreground">Today</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-ayur-vata/10 rounded-lg">
+                        <Calendar className="h-6 w-6 text-ayur-vata" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Appointments</p>
+                        <p className="text-2xl font-bold">28</p>
+                        <p className="text-xs text-muted-foreground">Today</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Dosha Distribution */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Dosha Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-ayur-vata rounded-full"></div>
-                      <span className="text-sm">Vata</span>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Dosha Distribution */}
+                <Card className="lg:col-span-1">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Activity className="h-5 w-5" />
+                      Dosha Distribution
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 bg-ayur-vata rounded-full"></div>
+                          <span className="text-sm">Vata</span>
+                        </div>
+                        <span className="font-semibold">432</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 bg-ayur-pitta rounded-full"></div>
+                          <span className="text-sm">Pitta</span>
+                        </div>
+                        <span className="font-semibold">398</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 bg-ayur-kapha rounded-full"></div>
+                          <span className="text-sm">Kapha</span>
+                        </div>
+                        <span className="font-semibold">417</span>
+                      </div>
                     </div>
-                    <span className="font-semibold">432</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-ayur-pitta rounded-full"></div>
-                      <span className="text-sm">Pitta</span>
-                    </div>
-                    <span className="font-semibold">398</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-ayur-kapha rounded-full"></div>
-                      <span className="text-sm">Kapha</span>
-                    </div>
-                    <span className="font-semibold">417</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Recent Activity */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-ayur-orange rounded-full mt-2"></div>
-                    <div className="text-sm">
-                      <p className="font-medium">Diet chart created for Priya Sharma</p>
-                      <p className="text-muted-foreground">(Vata imbalance)</p>
+                {/* Recent Activity */}
+                <Card className="lg:col-span-1">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Clock className="h-5 w-5" />
+                      Recent Activity
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-ayur-orange rounded-full mt-2"></div>
+                        <div className="text-sm">
+                          <p className="font-medium">Diet chart created for Priya Sharma</p>
+                          <p className="text-muted-foreground">(Vata imbalance)</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-ayur-success rounded-full mt-2"></div>
+                        <div className="text-sm">
+                          <p className="font-medium">New patient registered - Raj Kumar</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-ayur-vata rounded-full mt-2"></div>
+                        <div className="text-sm">
+                          <p className="font-medium">Food database updated</p>
+                          <p className="text-muted-foreground">15 new items added</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-ayur-pitta rounded-full mt-2"></div>
+                        <div className="text-sm">
+                          <p className="font-medium">Consultation completed</p>
+                          <p className="text-muted-foreground">Anita Gupta</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-ayur-success rounded-full mt-2"></div>
-                    <div className="text-sm">
-                      <p className="font-medium">New patient registered - Raj Kumar</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-ayur-vata rounded-full mt-2"></div>
-                    <div className="text-sm">
-                      <p className="font-medium">Food database updated</p>
-                      <p className="text-muted-foreground">15 new items added</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-ayur-pitta rounded-full mt-2"></div>
-                    <div className="text-sm">
-                      <p className="font-medium">Consultation completed</p>
-                      <p className="text-muted-foreground">Anita Gupta</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Quick Actions */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Plus className="h-5 w-5" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Button className="w-full justify-start bg-ayur-orange hover:bg-ayur-orange/90">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Add New Patient
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Create Diet Chart
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Search className="h-4 w-4 mr-2" />
-                    Browse Food Database
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule Appointment
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                {/* Quick Actions */}
+                <Card className="lg:col-span-1">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Plus className="h-5 w-5" />
+                      Quick Actions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <Button 
+                        onClick={() => setActiveView('patients')}
+                        className="w-full justify-start bg-ayur-orange hover:bg-ayur-orange/90"
+                      >
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Add New Patient
+                      </Button>
+                      <Button 
+                        onClick={() => setActiveView('diet-charts')}
+                        variant="outline" 
+                        className="w-full justify-start"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        Create Diet Chart
+                      </Button>
+                      <Button 
+                        onClick={() => setActiveView('food-database')}
+                        variant="outline" 
+                        className="w-full justify-start"
+                      >
+                        <Search className="h-4 w-4 mr-2" />
+                        Browse Food Database
+                      </Button>
+                      <Button variant="outline" className="w-full justify-start">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Schedule Appointment
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          )}
+
+          {activeView === 'patients' && <PatientsList />}
+          {activeView === 'food-database' && <FoodDatabase />}
+          {activeView === 'diet-charts' && <DietCharts />}
+          {activeView === 'analytics' && <Analytics />}
+          {activeView === 'ayurvedic-tools' && <AyurvedicTools />}
         </div>
       </div>
     </div>
