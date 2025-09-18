@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Search, 
   Plus, 
@@ -17,6 +21,31 @@ import {
 } from "lucide-react";
 
 const DietCharts = () => {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedFoods, setSelectedFoods] = useState<string[]>([]);
+
+  const availableFoods = [
+    { id: "rice", name: "Basmati Rice", category: "Grains", dosha: "Vata, Pitta", calories: 205 },
+    { id: "quinoa", name: "Quinoa", category: "Grains", dosha: "All Doshas", calories: 222 },
+    { id: "ghee", name: "Pure Ghee", category: "Fats", dosha: "All Doshas", calories: 112 },
+    { id: "almonds", name: "Soaked Almonds", category: "Nuts", dosha: "Vata, Pitta", calories: 161 },
+    { id: "turmeric", name: "Turmeric", category: "Spices", dosha: "All Doshas", calories: 29 },
+    { id: "ginger", name: "Fresh Ginger", category: "Spices", dosha: "Vata, Kapha", calories: 4 },
+    { id: "mung", name: "Mung Dal", category: "Legumes", dosha: "All Doshas", calories: 347 },
+    { id: "spinach", name: "Fresh Spinach", category: "Vegetables", dosha: "Pitta, Kapha", calories: 23 },
+    { id: "carrot", name: "Carrot", category: "Vegetables", dosha: "Vata, Pitta", calories: 41 },
+    { id: "dates", name: "Medjool Dates", category: "Fruits", dosha: "Vata", calories: 66 },
+    { id: "coconut", name: "Fresh Coconut", category: "Fruits", dosha: "Pitta", calories: 354 },
+    { id: "cucumber", name: "Cucumber", category: "Vegetables", dosha: "Pitta", calories: 16 }
+  ];
+
+  const handleFoodToggle = (foodId: string) => {
+    setSelectedFoods(prev => 
+      prev.includes(foodId) 
+        ? prev.filter(id => id !== foodId)
+        : [...prev, foodId]
+    );
+  };
   const dietCharts = [
     {
       id: 1,
@@ -115,10 +144,113 @@ const DietCharts = () => {
           <h2 className="text-2xl font-bold">Diet Charts Management</h2>
           <p className="text-muted-foreground">Create, manage, and track personalized Ayurvedic diet plans</p>
         </div>
-        <Button className="bg-ayur-orange hover:bg-ayur-orange/90">
-          <Plus className="h-4 w-4 mr-2" />
-          Create New Diet Chart
-        </Button>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-ayur-orange hover:bg-ayur-orange/90">
+              <Plus className="h-4 w-4 mr-2" />
+              Create New Diet Chart
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Create New Diet Chart</DialogTitle>
+              <DialogDescription>
+                Select foods and customize the diet plan for your patient
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              {/* Patient Details */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="patient-name">Patient Name</Label>
+                  <Input id="patient-name" placeholder="Enter patient name" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="chart-title">Diet Chart Title</Label>
+                  <Input id="chart-title" placeholder="e.g., Vata Balancing Diet" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="condition">Health Condition</Label>
+                  <Input id="condition" placeholder="e.g., Digestive Issues" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="duration">Duration (days)</Label>
+                  <Input id="duration" type="number" placeholder="30" />
+                </div>
+              </div>
+
+              {/* Selected Foods Summary */}
+              <div className="space-y-4">
+                <div>
+                  <Label>Selected Foods ({selectedFoods.length})</Label>
+                  <div className="mt-2 p-3 border rounded-md min-h-[100px] max-h-[200px] overflow-y-auto">
+                    {selectedFoods.length === 0 ? (
+                      <p className="text-muted-foreground text-sm">No foods selected yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {selectedFoods.map(foodId => {
+                          const food = availableFoods.find(f => f.id === foodId);
+                          return food ? (
+                            <div key={foodId} className="flex justify-between items-center text-sm">
+                              <span>{food.name}</span>
+                              <span className="text-muted-foreground">{food.calories} cal</span>
+                            </div>
+                          ) : null;
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => setIsCreateDialogOpen(false)}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      // Here you would save the diet chart
+                      setIsCreateDialogOpen(false);
+                      setSelectedFoods([]);
+                    }}
+                    className="flex-1 bg-ayur-orange hover:bg-ayur-orange/90"
+                  >
+                    Create Diet Chart
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Food Selection */}
+            <div className="mt-6">
+              <Label className="text-base font-semibold">Available Foods</Label>
+              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto">
+                {availableFoods.map((food) => (
+                  <div key={food.id} className="flex items-start space-x-3 p-3 border rounded-lg">
+                    <Checkbox
+                      id={food.id}
+                      checked={selectedFoods.includes(food.id)}
+                      onCheckedChange={() => handleFoodToggle(food.id)}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <Label htmlFor={food.id} className="text-sm font-medium cursor-pointer">
+                        {food.name}
+                      </Label>
+                      <div className="text-xs text-muted-foreground space-y-1">
+                        <div>Category: {food.category}</div>
+                        <div>Good for: {food.dosha}</div>
+                        <div>Calories: {food.calories}/100g</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats Cards */}

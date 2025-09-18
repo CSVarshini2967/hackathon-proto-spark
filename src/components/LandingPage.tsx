@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Heart, Stethoscope, User, Database } from "lucide-react";
-import FirebaseForm from "./FirebaseForm";
+import { Users, Heart, Stethoscope, User } from "lucide-react";
 
 interface LandingPageProps {
   onSelectUserType: (type: 'doctor' | 'patient') => void;
@@ -87,17 +86,6 @@ const LandingPage = ({ onSelectUserType }: LandingPageProps) => {
           </div>
         </div>
 
-        {/* Firebase Integration Section */}
-        <div className="mt-20">
-          <div className="text-center mb-8">
-            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <Database className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Firebase Integration Demo</h3>
-            <p className="text-muted-foreground">Store user data and fetch diet charts from Firestore</p>
-          </div>
-          <FirebaseForm />
-        </div>
 
         {/* Features Overview */}
         <div className="mt-20">
